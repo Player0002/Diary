@@ -1,14 +1,11 @@
 package com.danny.diary.data
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DiaryDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDiary(diaryItem: DiaryItem)
 
     @Delete
@@ -18,5 +15,5 @@ interface DiaryDao {
     fun getAllDiary(): Flow<List<DiaryItem>>
 
     @Query("select * from diary where seq = :seq")
-    suspend fun getDiary(seq: String): DiaryItem
+    suspend fun getDiary(seq: String): DiaryItem?
 }

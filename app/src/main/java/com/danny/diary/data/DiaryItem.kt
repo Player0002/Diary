@@ -13,6 +13,8 @@ data class DiaryItem(
     val time: Long
 ) {
     companion object {
+        val LOADING = DiaryItem("", "", 0L)
+
         fun getInstance(date: Long, content: String): DiaryItem {
             val seq = Instant.ofEpochSecond(date).atZone(ZoneId.systemDefault()).format(
                 DateTimeFormatter.ofPattern("yyyyMMdd")
