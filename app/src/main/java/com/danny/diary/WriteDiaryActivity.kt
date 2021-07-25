@@ -22,6 +22,7 @@ class WriteDiaryActivity : AppCompatActivity() {
                 binding.contents.visibility = View.INVISIBLE
             } else {
                 binding.contents.visibility = View.VISIBLE
+                binding.contents.setText(it.content)
                 binding.progress.visibility = View.INVISIBLE
             }
         }

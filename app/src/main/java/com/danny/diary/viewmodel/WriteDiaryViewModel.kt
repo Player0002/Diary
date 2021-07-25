@@ -1,5 +1,6 @@
 package com.danny.diary.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
@@ -17,11 +18,12 @@ class WriteDiaryViewModel @Inject constructor(
     private val dao: DiaryDao,
     private val defaultStr: String
 ) : ViewModel() {
-    val today = Calendar.getInstance().toInstant().atZone(ZoneId.systemDefault()).format(
+    private val today = Calendar.getInstance().toInstant().atZone(ZoneId.systemDefault()).format(
         DateTimeFormatter.ofPattern("yyyyMMdd")
-    )
+    ).toInt()
     val todayDiary = liveData {
         emit(DiaryItem.LOADING)
+        Log.d("LOGA", "$today")
         emit(
             dao.getDiary(today) ?: DiaryItem.getInstance(
                 Calendar.getInstance().timeInMillis,

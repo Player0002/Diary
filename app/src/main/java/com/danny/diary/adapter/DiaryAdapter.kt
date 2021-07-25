@@ -32,7 +32,13 @@ class DiaryAdapter : RecyclerView.Adapter<DiaryAdapter.DiaryHolder>() {
                     DateTimeFormatter.ofPattern("yyyy년 MM월 dd일의 일기")
                 )
             binding.dateTime.text = dateInfo
+            binding.root.setOnClickListener { onClickCallback?.invoke(diaryItem) }
         }
+    }
+
+    private var onClickCallback: ((DiaryItem) -> Unit)? = null
+    fun setOnClickListener(listener: (DiaryItem) -> Unit) {
+        onClickCallback = listener
     }
 
     val list = AsyncListDiffer(this, differ)

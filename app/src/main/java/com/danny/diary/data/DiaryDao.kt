@@ -15,5 +15,5 @@ interface DiaryDao {
     fun getAllDiary(): Flow<List<DiaryItem>>
 
     @Query("select * from diary where seq = :seq")
-    suspend fun getDiary(seq: String): DiaryItem?
+    suspend fun getDiary(seq: Int): DiaryItem?
 }
