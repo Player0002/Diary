@@ -11,7 +11,7 @@ interface DiaryDao {
     @Delete
     suspend fun deleteDiary(diaryItem: DiaryItem)
 
-    @Query("select * from diary")
+    @Query("select * from diary order by seq DESC")
     fun getAllDiary(): Flow<List<DiaryItem>>
 
     @Query("select * from diary where seq = :seq")

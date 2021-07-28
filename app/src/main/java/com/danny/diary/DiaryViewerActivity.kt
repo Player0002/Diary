@@ -48,7 +48,7 @@ class DiaryViewerActivity : AppCompatActivity() {
         diaryItem = intent?.extras?.get(DIARY_ITEM) as? DiaryItem
             ?: throw IllegalArgumentException("Diary Viewer without DiaryItem")
 
-        val calendar = Calendar.getInstance().toInstant().atZone(ZoneId.systemDefault())
+        val calendar = Instant.ofEpochMilli(diaryItem.time).atZone(ZoneId.systemDefault())
 
         val timeHeader = calendar.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"))
         val timeSub = calendar.format(DateTimeFormatter.ofPattern("a hh시 mm분 ss초"))
