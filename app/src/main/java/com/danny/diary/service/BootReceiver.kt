@@ -19,15 +19,23 @@ class BootReceiver : BroadcastReceiver() {
                     alarmIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT
                 )
-            val calendar: Calendar = (Calendar.getInstance().clone() as Calendar).apply {
-                timeInMillis = System.currentTimeMillis()
+
+            val calNow = Calendar.getInstance()
+            val calSet = calNow.clone() as Calendar
+
+            calSet.apply {
                 set(Calendar.HOUR_OF_DAY, 23)
+                set(Calendar.MINUTE, 0)
                 set(Calendar.SECOND, 0)
                 set(Calendar.MILLISECOND, 0)
             }
+            if (calSet <= calNow) {
+                calSet.add(Calendar.DATE, 1);
+            }
+
             alarmManager.setRepeating(
                 AlarmManager.RTC_WAKEUP,
-                calendar.timeInMillis,
+                calSet.timeInMillis,
                 AlarmManager.INTERVAL_DAY,
                 pending
             )

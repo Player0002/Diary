@@ -42,10 +42,6 @@ class MainActivity : AppCompatActivity() {
 
         swiping()
 
-        createChannel(
-            "diary_channel",
-            "Diary"
-        )
         setContentView(binding.root)
     }
 
@@ -76,15 +72,23 @@ class MainActivity : AppCompatActivity() {
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val calendar: Calendar = (Calendar.getInstance().clone() as Calendar).apply {
-            timeInMillis = System.currentTimeMillis()
+
+        val calNow = Calendar.getInstance()
+        val calSet = calNow.clone() as Calendar
+
+        calSet.apply {
             set(Calendar.HOUR_OF_DAY, 23)
+            set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }
+        if (calSet <= calNow) {
+            calSet.add(Calendar.DATE, 1);
+        }
+
         alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP,
-            calendar.timeInMillis,
+            calSet.timeInMillis,
             AlarmManager.INTERVAL_DAY,
             pending
         )
@@ -103,32 +107,6 @@ class MainActivity : AppCompatActivity() {
             )
         }
     }
-
-
-    private fun createChannel(channelId: String, channelName: String) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationChannel = NotificationChannel(
-                channelId,
-                channelName,
-                NotificationManager.IMPORTANCE_HIGH
-            )
-                .apply {
-                    setShowBadge(false)
-                }
-
-            notificationChannel.enableLights(true)
-            notificationChannel.lightColor = Color.RED
-            notificationChannel.enableVibration(true)
-            notificationChannel.description = "Notification"
-
-            val notificationManager = getSystemService(
-                NotificationManager::class.java
-            )
-            notificationManager.createNotificationChannel(notificationChannel)
-
-        }
-    }
-
     private fun observing() {
         viewModel.diaries.observe(this) {
             diaryAdapter.list.submitList(it)

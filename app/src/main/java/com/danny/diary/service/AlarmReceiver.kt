@@ -9,7 +9,6 @@ import com.danny.diary.NotiUtil.sendNotification
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-
         val manager = ContextCompat.getSystemService(
             context,
             NotificationManager::class.java
