@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidPractice/Diary/app/src/main/res/layout/activity_diary_viewer.xml" value="0.1" />
+        <entry key="..\:/AndroidPractice/Diary/app/src/main/res/layout/activity_write_diary.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_diary_viewer.xml" value="0.307518115942029" />
         <entry key="app/src/main/res/layout/diary_item.xml" value="0.307518115942029" />
         <entry key="app/src/main/res/layout/layout_diary_widget.xml" value="0.307518115942029" />

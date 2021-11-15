@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
@@ -26,7 +27,6 @@ import java.io.OutputStream
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 class DiaryViewerActivity : AppCompatActivity() {
 
@@ -48,13 +48,29 @@ class DiaryViewerActivity : AppCompatActivity() {
         diaryItem = intent?.extras?.get(DIARY_ITEM) as? DiaryItem
             ?: throw IllegalArgumentException("Diary Viewer without DiaryItem")
 
+        val regex = """/\${'$'}\[today+(-?[0-9]+)?\]/g""".toRegex()
+        val firstLine = diaryItem.content.split("\n").first()
+        val replaceDate: Int? = regex.find(firstLine)?.groups?.run {
+            if (this.isNotEmpty()) this.first()?.value?.toInt()
+            else null
+        }
+
+        regex.findAll(firstLine).iterator().forEach { Log.d("LOGC", it.toString()) }
+
+
+        Log.d("LOGA", "$replaceDate ${regex.pattern} $firstLine ${regex.matches(firstLine)}")
         val calendar = Instant.ofEpochMilli(diaryItem.time).atZone(ZoneId.systemDefault())
+
+        if (replaceDate != null) {
+            calendar.plusDays(replaceDate.toLong())
+        }
 
         val timeHeader = calendar.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"))
         val timeSub = calendar.format(DateTimeFormatter.ofPattern("a hh시 mm분 ss초"))
 
+
         val content =
-            diaryItem.content.replace("\${today}", "## $timeHeader")
+            diaryItem.content.replace(firstLine, "## $timeHeader")
                 .replace("\${time}", "### $timeSub")
 
         val mark = Markwon.builder(this).usePlugin(object : AbstractMarkwonPlugin() {
@@ -86,7 +102,7 @@ class DiaryViewerActivity : AppCompatActivity() {
     private fun getBitmapFromView(view: View, defaultColor: Int = typed.data): Bitmap? {
         val fixedHeight = if (view.height < view.width) view.width else view.height
         val bitmap =
-            Bitmap.createBitmap(view.width, fixedHeight, Bitmap.Config.ARGB_8888)
+            Bitmap.createBitmap(fixedHeight, fixedHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         canvas.drawColor(defaultColor)
         view.draw(canvas)
